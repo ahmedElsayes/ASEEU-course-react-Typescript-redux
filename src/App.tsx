@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import searchRepositories from './redux-assets/action-creators/searchRepositories';
+import { useTypedSelector } from './redux-assets/store';
 
 function App() {
   const dispatch = useDispatch()
   const [keyWord, setKeyWord] = useState("")
 
-  const repositories = useSelector((state: any) => state.repositories)
+  // const repositories = useSelector((state) => state.repositories)
+  const { data, loading, error } = useTypedSelector((state) => state.repositories)
 
-  console.log("repositories: ", repositories)
   const onSearchConfirm = (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
     dispatch(searchRepositories(keyWord))
@@ -34,6 +35,17 @@ function App() {
             onClick={onSearchConfirm}
           > Search </button>
         </div>
+      </div>
+      <div>
+        {error && {error}}
+        {loading && <h3>Loading......</h3>}
+        {!error && !loading && (
+          data.map((name, indx) => {
+            return (
+              <p key={indx}> {name} </p>
+            )
+          })
+        )}
       </div>
     </div>
   );
