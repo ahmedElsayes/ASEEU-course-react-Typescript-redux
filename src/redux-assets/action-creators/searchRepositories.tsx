@@ -1,7 +1,10 @@
+import axios from "axios"
+import { Dispatch } from "redux"
 import ActionType from "../action-types"
+import repositoriesAction from "../actions/repositoriesAction"
 
 
-const searchRepositories = (keyWord: string) => async (dispatch: any) => {
+const searchRepositories = (keyWord: string) => async (dispatch: Dispatch<repositoriesAction>) => {
   dispatch({
     type: ActionType.SEARCH_REPOSITORIES_REQUEST
   })
@@ -9,11 +12,13 @@ const searchRepositories = (keyWord: string) => async (dispatch: any) => {
   try {
     // fetch data from npm package
     // https://registry.npmjs.org/-/v1/search?text=React
-    const data: string[] = []
+    const { data }: any = await axios.get(`https://registry.npmjs.org/-/v1/search?text=${keyWord}`)
 
+    const names = data.objects.map((object: any) => object.package.name)
+    console.log("names: ", names)
     dispatch({
       type: ActionType.SEARCH_REPOSITORIES_SUCCESS,
-      payload: data
+      payload: names
     })
 
   } catch (err: any) {
