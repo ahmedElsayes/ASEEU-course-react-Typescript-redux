@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import searchRepositories from './redux-assets/action-creators/searchRepositories';
 
 function App() {
+  const dispatch = useDispatch()
   const [keyWord, setKeyWord] = useState("")
 
+  const repositories = useSelector((state: any) => state.repositories)
+
+  console.log("repositories: ", repositories)
   const onSearchConfirm = (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault()
-    console.log("keyWord", keyWord)
+    dispatch(searchRepositories(keyWord))
   }
   return (
     <div className='container'>
